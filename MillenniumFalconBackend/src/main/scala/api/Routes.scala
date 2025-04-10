@@ -3,9 +3,10 @@ package api
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import application.SurvivalComputationService
 import model.BountyHuntersData
 
-object Routes {
+class Routes(survivalComputationService: SurvivalComputationService) {
   val routes: Route =
     concat(
       path("test") {
@@ -13,10 +14,13 @@ object Routes {
           complete("test route")
         }
       },
-      path("compute") {
-        post {
-          entity(as[BountyHuntersData]) { entity =>
-            complete(entity)
+      post {
+        path("compute") {
+          entity(as[BountyHuntersData]) { bountyHuntersData =>
+            onSuccess(survivalComputationService.computeSurvivalProbability(bountyHuntersData)) { result =>
+              //todo: to update later
+              complete(result.toString)
+            }
           }
         }
       }

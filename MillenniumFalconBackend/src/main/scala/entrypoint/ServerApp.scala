@@ -3,14 +3,22 @@ package entrypoint
 import akka.actor.typed.{ActorSystem, Behavior, Terminated}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import api.{Routes, Server}
+import application.{DefaultSurvivalComputationService, SurvivalComputationActor, SurvivalComputationService}
 
 final class ServerApp(context: ActorContext[_]) {
+
+  implicit val system: ActorSystem[_] = context.system
 
   def start(): Behavior[Nothing] = {
 
     val serverActor = context.spawnAnonymous(Server())
 
-    serverActor.tell(Server.Bind("localHost", 8080, Routes.routes))
+    val survivalComputationActorRef = context.spawnAnonymous(SurvivalComputationActor(routesQueryService = ???))
+
+    val survivalComputationService = new DefaultSurvivalComputationService(survivalComputationActorRef)
+    val serverRoutes: Routes = new Routes(survivalComputationService)
+
+    serverActor.tell(Server.Bind("localHost", 8080, serverRoutes.routes))
 
     Behaviors.receiveSignal[Nothing] {
       case (_, Terminated(_)) =>

@@ -8,8 +8,6 @@ import repository.RoutesQueryService
 import scala.util.{Failure, Random, Success}
 
 object SurvivalComputationActor {
-
-
   def calculator(bountyHuntersData: BountyHuntersData,
                  routes: Seq[Route],
                  replyTo: ActorRef[Output]): Behavior[Input] = Behaviors.setup { calculatorContext =>
