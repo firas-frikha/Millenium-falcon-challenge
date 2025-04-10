@@ -22,4 +22,6 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.13",
 
   "com.lightbend.akka" %% "akka-stream-alpakka-slick" % "9.0.1",
+
+  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
 )
