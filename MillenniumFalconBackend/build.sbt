@@ -23,5 +23,7 @@ libraryDependencies ++= Seq(
 
   "com.lightbend.akka" %% "akka-stream-alpakka-slick" % "9.0.1",
 
-  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
+  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
+
+  "org.xerial" % "sqlite-jdbc" % "3.45.1.0"
 )
