@@ -2,28 +2,17 @@ package application
 
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.Behaviors
+import infrastructure.MillenniumFalconConfiguration
 import model.{BountyHuntersData, Route}
 import repository.RoutesQueryService
 
-import scala.util.{Failure, Random, Success}
+import scala.util.{Failure, Success}
 
 object SurvivalComputationActor {
-  def calculator(bountyHuntersData: BountyHuntersData,
-                 routes: Seq[Route],
-                 replyTo: ActorRef[Output]): Behavior[Input] = Behaviors.setup { calculatorContext =>
-
-    Behaviors.receiveMessage {
-      case InitiateComputation =>
-
-        //todo: implement here computation logic
-        val survivalPercentage: Double = Random.nextDouble()
-        replyTo.tell(SurvivalPercentage(survivalPercentage))
-
-        Behaviors.same
-    }
-  }
 
   def apply(routesQueryService: RoutesQueryService): Behavior[Input] = Behaviors.setup { behaviorContext =>
+
+    val millenniumFalconConfiguration = behaviorContext.system.extension(MillenniumFalconConfiguration)
 
     Behaviors.receiveMessage {
       case Compute(bountyHuntersData, replyTo) =>
@@ -40,8 +29,24 @@ object SurvivalComputationActor {
 
       case SuccessfulFetchedRoutes(routes, bountyHuntersData, replyTo) =>
 
-        behaviorContext.self.tell(InitiateComputation)
-        calculator(bountyHuntersData = bountyHuntersData, routes = routes, replyTo = replyTo)
+        behaviorContext.self.tell(InitiateComputation(bountyHuntersData, routes, replyTo))
+
+        Behaviors.same
+
+      case InitiateComputation(bountyHuntersData, routes, replyTo) =>
+
+        val adjacencyList = buildAdjacencyList(routes)
+
+        val survivalPercentage: Double = bfsTraversal(
+          autonomy = millenniumFalconConfiguration.autonomy,
+          startPlanet = millenniumFalconConfiguration.departure,
+          targetPlanet = millenniumFalconConfiguration.arrival,
+          adjacencyList = adjacencyList,
+          bountyHuntersData = bountyHuntersData
+        )
+        replyTo.tell(SurvivalPercentage(survivalPercentage))
+
+        Behaviors.same
     }
   }
 
@@ -55,7 +60,7 @@ object SurvivalComputationActor {
 
   case class FailedFetchedRoutes(exception: Throwable, replyTo: ActorRef[Output]) extends Input
 
-  case object InitiateComputation extends Input
+  case class InitiateComputation(bountyHuntersData: BountyHuntersData, routes: Seq[Route], replyTo: ActorRef[Output]) extends Input
 
   sealed trait Output
 

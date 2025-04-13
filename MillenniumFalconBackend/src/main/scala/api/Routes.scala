@@ -18,7 +18,6 @@ class Routes(survivalComputationService: SurvivalComputationService) {
         path("compute") {
           entity(as[BountyHuntersData]) { bountyHuntersData =>
             onSuccess(survivalComputationService.computeSurvivalProbability(bountyHuntersData)) { result =>
-              //todo: to update later
               complete(result.toString)
             }
           }
