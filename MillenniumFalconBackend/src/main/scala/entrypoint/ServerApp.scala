@@ -3,11 +3,12 @@ package entrypoint
 import akka.actor.typed.{ActorSystem, Behavior, Terminated}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import api.{Routes, Server}
-import application.{DefaultSurvivalComputationService, SurvivalComputationActor, SurvivalComputationService}
+import application.{DefaultSurvivalComputationService, SurvivalComputationActor}
+import com.typesafe.config.{ConfigFactory, ConfigParseOptions, ConfigSyntax}
 import infrastructure.{DefaultRoutesQueryService, SlickSessionProvider}
 import repository.RoutesSchema
 
-import java.sql.DriverManager
+import java.io.File
 
 final class ServerApp(context: ActorContext[_]) {
 
@@ -40,6 +41,19 @@ object ServerApp {
       new ServerApp(context).start()
     }
 
-    ActorSystem[Nothing](rootBehavior, "lottery-service")
+
+    //todo : update file path to be read from env variable
+    val defaultConfig = ConfigFactory.parseFileAnySyntax(new File("/Users/firasfrikha/projects/fullStackProjects/Millenium-falcon-challenge/MillenniumFalconBackend/src/main/resources/application.conf"))
+
+    // todo: update file path to be read as parameter
+    val millenniumFalconParams = ConfigFactory.parseFile(new File("/Users/firasfrikha/projects/fullStackProjects/Millenium-falcon-challenge/MillenniumFalconBackend/src/main/resources/millennium-falcon.json"),
+      ConfigParseOptions.defaults().setSyntax(ConfigSyntax.JSON)
+    )
+
+    val appConfig = defaultConfig
+      .withFallback(millenniumFalconParams)
+      .resolve()
+
+    ActorSystem[Nothing](rootBehavior, "lottery-service", appConfig)
   }
 }

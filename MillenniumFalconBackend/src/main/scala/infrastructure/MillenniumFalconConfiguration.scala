@@ -14,7 +14,7 @@ final class MillenniumFalconConfiguration(config: Config) extends Extension{
 object MillenniumFalconConfiguration extends ExtensionId[MillenniumFalconConfiguration] {
 
   val Autonomy = "autonomy"
-  val Departure = "Departure"
+  val Departure = "departure"
   val Arrival = "arrival"
   val DatabaseRoute = "routes_db"
 
