@@ -8,20 +8,13 @@ import model.BountyHuntersData
 
 class Routes(survivalComputationService: SurvivalComputationService) {
   val routes: Route =
-    concat(
-      path("test") {
-        get {
-          complete("test route")
-        }
-      },
-      post {
-        path("compute") {
-          entity(as[BountyHuntersData]) { bountyHuntersData =>
-            onSuccess(survivalComputationService.computeSurvivalProbability(bountyHuntersData)) { result =>
-              complete(result.toString)
-            }
+    post {
+      path("compute") {
+        entity(as[BountyHuntersData]) { bountyHuntersData =>
+          onSuccess(survivalComputationService.computeSurvivalProbability(bountyHuntersData)) { result =>
+            complete(result.toString)
           }
         }
       }
-    )
+    }
 }
