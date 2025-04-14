@@ -1,6 +1,5 @@
 package api
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.ContentTypes._
 import akka.http.scaladsl.server.Route
@@ -11,10 +10,8 @@ import org.scalamock.scalatest.MockFactory
 
 import scala.concurrent.Future
 import application.SurvivalComputationService
-import com.typesafe.config.{ConfigFactory, ConfigParseOptions, ConfigSyntax}
 import org.scalatest.BeforeAndAfterAll
 
-import java.io.File
 import scala.util.Random
 
 
