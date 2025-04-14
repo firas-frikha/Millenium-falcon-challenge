@@ -12,6 +12,7 @@ import repository.RoutesQueryService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 import scala.util.Random
 
 class SurvivalComputationActorSpec
@@ -64,7 +65,7 @@ class SurvivalComputationActorSpec
         survivalComputationActorProbe.expectMessage(computeMessage)
         survivalComputationActorProbe.expectMessage(SurvivalComputationActor.SuccessfulFetchedRoutes(routesQueryServiceResponse, bountyHuntersData, outputProbe.ref))
 
-        outputProbe.expectMessageType[SurvivalComputationActor.SurvivalPercentage]
+        outputProbe.expectMessageType[SurvivalComputationActor.SurvivalPercentage](10.seconds)
       }
 
       "RoutesQueryService returns exception" in {
