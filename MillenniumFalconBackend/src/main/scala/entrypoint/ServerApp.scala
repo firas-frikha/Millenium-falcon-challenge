@@ -2,10 +2,10 @@ package entrypoint
 
 import akka.actor.typed.{ActorSystem, Behavior, Terminated}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-import api.{Routes, Server}
+import api.{RoutesProvider, Server}
 import application.{DefaultSurvivalComputationService, SurvivalComputationActor}
 import com.typesafe.config.{ConfigFactory, ConfigParseOptions, ConfigSyntax}
-import infrastructure.{DefaultRoutesQueryService, SlickSessionProvider}
+import infrastructure.{DefaultHttpBinder, DefaultRoutesQueryService, SlickSessionProvider}
 import repository.RoutesSchema
 
 import java.io.File
@@ -16,14 +16,16 @@ final class ServerApp(context: ActorContext[_]) {
 
   def start(): Behavior[Nothing] = {
 
-    val serverActor = context.spawnAnonymous(Server())
+
+    val httpBinder = new DefaultHttpBinder()
+    val serverActor = context.spawnAnonymous(Server(httpBinder))
 
     val slickSession = system.extension(SlickSessionProvider)
     val defaultRoutesQueryService = new DefaultRoutesQueryService(new RoutesSchema(), slickSession.slickSession)
     val survivalComputationActorRef = context.spawnAnonymous(SurvivalComputationActor(routesQueryService = defaultRoutesQueryService))
 
     val survivalComputationService = new DefaultSurvivalComputationService(survivalComputationActorRef)
-    val serverRoutes: Routes = new Routes(survivalComputationService)
+    val serverRoutes: RoutesProvider = new RoutesProvider(survivalComputationService)
 
     serverActor.tell(Server.Bind("localHost", 8080, serverRoutes.routes))
 

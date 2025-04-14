@@ -25,5 +25,11 @@ libraryDependencies ++= Seq(
 
   "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
 
-  "org.xerial" % "sqlite-jdbc" % "3.45.1.0"
+  "org.xerial" % "sqlite-jdbc" % "3.45.1.0",
+
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion,
+
+  "com.typesafe.akka" %% "akka-http-testkit" % AkkaHttpVersion,
+  "org.scalatest" %% "scalatest" % "3.2.19" % "test",
+  "org.scalamock" %% "scalamock" % "7.3.0"
 )

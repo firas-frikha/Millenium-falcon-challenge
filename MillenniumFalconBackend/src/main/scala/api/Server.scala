@@ -4,18 +4,20 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.http.scaladsl.server.Route
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 object Server {
 
-  def apply(): Behavior[Input] = Behaviors.setup { actorContext =>
+  def apply(httpBinder: HttpBinder): Behavior[Input] = Behaviors.setup { actorContext =>
     import actorContext.system
 
     Behaviors.receiveMessage {
       case Bind(address, port, routes) =>
-        actorContext.pipeToSelf(Http().newServerAt(address, port).bind(routes)) {
+        actorContext.pipeToSelf(httpBinder.bind(address, port, routes)) {
           case Failure(exception) =>
             LogFailedServerBinding(exception)
           case Success(serverBinding) =>
@@ -35,7 +37,7 @@ object Server {
 
   sealed trait Input
 
-  case class Bind(address: String, port: Int, routes: Route) extends Input
+  case class Bind(address: String, port: Int, routes: HttpRequest => Future[HttpResponse]) extends Input
 
   case class LogSuccessfulServerBinding(serverBinding: ServerBinding) extends Input
 

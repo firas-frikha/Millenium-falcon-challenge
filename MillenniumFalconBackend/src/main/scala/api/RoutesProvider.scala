@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Route
 import application.SurvivalComputationService
 import model.BountyHuntersData
 
-class Routes(survivalComputationService: SurvivalComputationService) {
+class RoutesProvider(survivalComputationService: SurvivalComputationService) {
   val routes: Route =
     post {
       path("compute") {
