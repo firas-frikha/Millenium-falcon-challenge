@@ -12,8 +12,7 @@ import repository.RoutesQueryService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration.DurationInt
-import scala.util.Random
+
 
 class SurvivalComputationActorSpec
   extends AnyWordSpec
@@ -27,48 +26,177 @@ class SurvivalComputationActorSpec
 
   "SurvivalComputationActor" when {
     "Receiving Compute message" must {
-      val bountyHuntersData = BountyHuntersData(
-        countdown = Random.nextInt(),
-        bounty_hunters = Seq(
-          BountyHuntersData.AttackPlan(planet = Random.alphanumeric.take(12).mkString, day = Random.nextInt()),
-          BountyHuntersData.AttackPlan(planet = Random.alphanumeric.take(12).mkString, day = Random.nextInt()),
-        )
-      )
-      "RoutesQueryService returns successful response" in {
 
+      "RoutesQueryService returns successful response" when {
         val routesQueryServiceResponse: Seq[Route] = Seq(
-          Route(origin = Random.alphanumeric.take(12).mkString,
-            destination = Random.alphanumeric.take(12).mkString,
-            travelTime = Random.nextInt()),
-          Route(origin = Random.alphanumeric.take(12).mkString,
-            destination = Random.alphanumeric.take(12).mkString,
-            travelTime = Random.nextInt()))
+          Route(origin = "Tatooine",
+            destination = "Dagobah",
+            travelTime = 6),
+          Route(origin = "Dagobah",
+            destination = "Endor",
+            travelTime = 4),
+          Route(origin = "Dagobah",
+            destination = "Hoth",
+            travelTime = 1),
+          Route(origin = "Hoth",
+            destination = "Endor",
+            travelTime = 1),
+          Route(origin = "Tatooine",
+            destination = "Hoth",
+            travelTime = 6)
+        )
+        "SurvivalPercentage should be 0" in {
 
-        val routesQueryServiceMock = mock[RoutesQueryService]
-        (routesQueryServiceMock.fetchAll _)
-          .expects()
-          .returns(Future(routesQueryServiceResponse))
+          val bountyHuntersData = BountyHuntersData(
+            countdown = 7,
+            bounty_hunters = Seq(
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 6),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 7),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 8)
+            )
+          )
+
+          val routesQueryServiceMock = mock[RoutesQueryService]
+          (routesQueryServiceMock.fetchAll _)
+            .expects()
+            .returns(Future(routesQueryServiceResponse))
 
 
-        val SurvivalComputationActorBehavior = SurvivalComputationActor(
-          routesQueryService = routesQueryServiceMock)
+          val SurvivalComputationActorBehavior = SurvivalComputationActor(
+            routesQueryService = routesQueryServiceMock)
 
-        val outputProbe = testKit.createTestProbe[SurvivalComputationActor.Output]()
+          val outputProbe = testKit.createTestProbe[SurvivalComputationActor.Output]()
 
-        val survivalComputationActorProbe = testKit.createTestProbe[SurvivalComputationActor.Input]()
-        val survivalComputationActor = testKit.spawn(Behaviors.monitor(survivalComputationActorProbe.ref, SurvivalComputationActorBehavior))
+          val survivalComputationActorProbe = testKit.createTestProbe[SurvivalComputationActor.Input]()
+          val survivalComputationActor = testKit.spawn(Behaviors.monitor(survivalComputationActorProbe.ref, SurvivalComputationActorBehavior))
 
-        val computeMessage = SurvivalComputationActor.Compute(bountyHuntersData = bountyHuntersData, replyTo = outputProbe.ref)
+          val computeMessage = SurvivalComputationActor.Compute(bountyHuntersData = bountyHuntersData, replyTo = outputProbe.ref)
 
-        survivalComputationActor.tell(computeMessage)
+          survivalComputationActor.tell(computeMessage)
 
-        survivalComputationActorProbe.expectMessage(computeMessage)
-        survivalComputationActorProbe.expectMessage(SurvivalComputationActor.SuccessfulFetchedRoutes(routesQueryServiceResponse, bountyHuntersData, outputProbe.ref))
+          survivalComputationActorProbe.expectMessage(computeMessage)
+          survivalComputationActorProbe.expectMessage(SurvivalComputationActor.SuccessfulFetchedRoutes(routesQueryServiceResponse, bountyHuntersData, outputProbe.ref))
 
-        outputProbe.expectMessageType[SurvivalComputationActor.SurvivalPercentage](10.seconds)
+          outputProbe.expectMessage(SurvivalComputationActor.SurvivalPercentage(0))
+        }
+
+        "SurvivalPercentage should be 0.81" in {
+
+          val bountyHuntersData = BountyHuntersData(
+            countdown = 8,
+            bounty_hunters = Seq(
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 6),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 7),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 8)
+            )
+          )
+
+          val routesQueryServiceMock = mock[RoutesQueryService]
+          (routesQueryServiceMock.fetchAll _)
+            .expects()
+            .returns(Future(routesQueryServiceResponse))
+
+
+          val SurvivalComputationActorBehavior = SurvivalComputationActor(
+            routesQueryService = routesQueryServiceMock)
+
+          val outputProbe = testKit.createTestProbe[SurvivalComputationActor.Output]()
+
+          val survivalComputationActorProbe = testKit.createTestProbe[SurvivalComputationActor.Input]()
+          val survivalComputationActor = testKit.spawn(Behaviors.monitor(survivalComputationActorProbe.ref, SurvivalComputationActorBehavior))
+
+          val computeMessage = SurvivalComputationActor.Compute(bountyHuntersData = bountyHuntersData, replyTo = outputProbe.ref)
+
+          survivalComputationActor.tell(computeMessage)
+
+          survivalComputationActorProbe.expectMessage(computeMessage)
+          survivalComputationActorProbe.expectMessage(SurvivalComputationActor.SuccessfulFetchedRoutes(routesQueryServiceResponse, bountyHuntersData, outputProbe.ref))
+
+          outputProbe.expectMessage(SurvivalComputationActor.SurvivalPercentage(0.81))
+        }
+
+        "SurvivalPercentage should be 0.9" in {
+
+          val bountyHuntersData = BountyHuntersData(
+            countdown = 9,
+            bounty_hunters = Seq(
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 6),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 7),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 8)
+            )
+          )
+
+          val routesQueryServiceMock = mock[RoutesQueryService]
+          (routesQueryServiceMock.fetchAll _)
+            .expects()
+            .returns(Future(routesQueryServiceResponse))
+
+
+          val SurvivalComputationActorBehavior = SurvivalComputationActor(
+            routesQueryService = routesQueryServiceMock)
+
+          val outputProbe = testKit.createTestProbe[SurvivalComputationActor.Output]()
+
+          val survivalComputationActorProbe = testKit.createTestProbe[SurvivalComputationActor.Input]()
+          val survivalComputationActor = testKit.spawn(Behaviors.monitor(survivalComputationActorProbe.ref, SurvivalComputationActorBehavior))
+
+          val computeMessage = SurvivalComputationActor.Compute(bountyHuntersData = bountyHuntersData, replyTo = outputProbe.ref)
+
+          survivalComputationActor.tell(computeMessage)
+
+          survivalComputationActorProbe.expectMessage(computeMessage)
+          survivalComputationActorProbe.expectMessage(SurvivalComputationActor.SuccessfulFetchedRoutes(routesQueryServiceResponse, bountyHuntersData, outputProbe.ref))
+
+          outputProbe.expectMessage(SurvivalComputationActor.SurvivalPercentage(0.9))
+        }
+
+        "SurvivalPercentage should be 1" in {
+
+          val bountyHuntersData = BountyHuntersData(
+            countdown = 10,
+            bounty_hunters = Seq(
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 6),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 7),
+              BountyHuntersData.AttackPlan(planet = "Hoth", day = 8)
+            )
+          )
+
+          val routesQueryServiceMock = mock[RoutesQueryService]
+          (routesQueryServiceMock.fetchAll _)
+            .expects()
+            .returns(Future(routesQueryServiceResponse))
+
+
+          val SurvivalComputationActorBehavior = SurvivalComputationActor(
+            routesQueryService = routesQueryServiceMock)
+
+          val outputProbe = testKit.createTestProbe[SurvivalComputationActor.Output]()
+
+          val survivalComputationActorProbe = testKit.createTestProbe[SurvivalComputationActor.Input]()
+          val survivalComputationActor = testKit.spawn(Behaviors.monitor(survivalComputationActorProbe.ref, SurvivalComputationActorBehavior))
+
+          val computeMessage = SurvivalComputationActor.Compute(bountyHuntersData = bountyHuntersData, replyTo = outputProbe.ref)
+
+          survivalComputationActor.tell(computeMessage)
+
+          survivalComputationActorProbe.expectMessage(computeMessage)
+          survivalComputationActorProbe.expectMessage(SurvivalComputationActor.SuccessfulFetchedRoutes(routesQueryServiceResponse, bountyHuntersData, outputProbe.ref))
+
+          outputProbe.expectMessage(SurvivalComputationActor.SurvivalPercentage(1))
+        }
+
       }
-
       "RoutesQueryService returns exception" in {
+
+        val bountyHuntersData = BountyHuntersData(
+          countdown = 7,
+          bounty_hunters = Seq(
+            BountyHuntersData.AttackPlan(planet = "Hoth", day = 6),
+            BountyHuntersData.AttackPlan(planet = "Hoth", day = 7),
+            BountyHuntersData.AttackPlan(planet = "Hoth", day = 8)
+          )
+        )
+
         val exception = new RuntimeException("Unknown exception")
 
         val routesQueryServiceMock = mock[RoutesQueryService]

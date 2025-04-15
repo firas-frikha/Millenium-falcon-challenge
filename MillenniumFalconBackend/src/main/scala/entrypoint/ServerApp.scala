@@ -56,6 +56,6 @@ object ServerApp {
       .withFallback(millenniumFalconParams)
       .resolve()
 
-    ActorSystem[Nothing](rootBehavior, "lottery-service", appConfig)
+    ActorSystem[Nothing](rootBehavior, "millenium-backend-service", appConfig)
   }
 }
