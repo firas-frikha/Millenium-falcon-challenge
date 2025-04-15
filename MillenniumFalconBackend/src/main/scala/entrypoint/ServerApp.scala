@@ -37,18 +37,18 @@ final class ServerApp(context: ActorContext[_]) {
 }
 
 object ServerApp {
-  def main(array: Array[String]): Unit = {
 
+  final val ServerConfigPath = "SERVER_CONFIG_PATH"
+  final  val MillenniumFalconConfigPath = "MILLENIUM_CONFIG_PATH"
+
+  def main(array: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
       new ServerApp(context).start()
     }
 
+    val defaultConfig = ConfigFactory.parseFileAnySyntax(new File(sys.env(ServerConfigPath)))
 
-    //todo : update file path to be read from env variable
-    val defaultConfig = ConfigFactory.parseFileAnySyntax(new File("/Users/firasfrikha/projects/fullStackProjects/Millenium-falcon-challenge/MillenniumFalconBackend/src/main/resources/application.conf"))
-
-    // todo: update file path to be read as parameter
-    val millenniumFalconParams = ConfigFactory.parseFile(new File("/Users/firasfrikha/projects/fullStackProjects/Millenium-falcon-challenge/MillenniumFalconBackend/src/main/resources/millennium-falcon.json"),
+    val millenniumFalconParams = ConfigFactory.parseFile(new File(sys.env(MillenniumFalconConfigPath)),
       ConfigParseOptions.defaults().setSyntax(ConfigSyntax.JSON)
     )
 
