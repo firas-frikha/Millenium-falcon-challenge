@@ -7,12 +7,15 @@ import application.SurvivalComputationService
 import model.BountyHuntersData
 
 class RoutesProvider(survivalComputationService: SurvivalComputationService) {
+
   val routes: Route =
-    post {
-      path("compute") {
-        entity(as[BountyHuntersData]) { bountyHuntersData =>
-          onSuccess(survivalComputationService.computeSurvivalProbability(bountyHuntersData)) { result =>
-            complete(result.toString)
+    cors() {
+      post {
+        path("compute") {
+          entity(as[BountyHuntersData]) { bountyHuntersData =>
+            onSuccess(survivalComputationService.computeSurvivalProbability(bountyHuntersData)) { result =>
+              complete(result.toString)
+            }
           }
         }
       }
