@@ -1,0 +1,19 @@
+<div class="upload-container">
+  <input
+    #inputFile
+    type="file"
+    accept="application/json"
+    (change)="onFileChange(inputFile.files)" />
+
+  <button
+    (click)="compute()"
+    [disabled]="!file">
+    Compute survival percentage
+  </button>
+
+  <div *ngIf="survivalPercentage !== null" class="result">
+    <strong
+    [style.color]="getColorForPercentage(survivalPercentage)">{{ survivalPercentage }}%</strong>
+  </div>
+</div>
+

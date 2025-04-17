@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="universe" uuid="ff003940-8700-4cc6-acc7-57b5253fbe0c">
+    <data-source source="LOCAL" name="universe.db" uuid="43956275-8614-4419-ab8a-25c463d40015">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/main/resources/universe.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/universe.db</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
       </jdbc-additional-properties>

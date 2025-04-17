@@ -1,0 +1,45 @@
+/* Center & bound the whole app */
+.app-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* The rectangle around header + upload + result */
+.app-card {
+  width: 400px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+/* Header inside the card */
+.app-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.header-logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.header-title {
+  margin: 0.5rem 0 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+/* file-upload component sits naturally here via <app-input-file> */
+
+/* result in its own sub‑block */
+.result-block {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  background: #fafafa;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
