@@ -2,6 +2,12 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / scalaVersion := "2.13.16"
 
+enablePlugins(JavaAppPackaging)
+
+Compile / mainClass := Some("cli/GiveMeTheOdds")
+
+name := "give-me-the-odds"
+
 lazy val root = (project in file("."))
   .settings(
     name := "MillenniumFalconBackend"
@@ -31,7 +37,6 @@ libraryDependencies ++= Seq(
 
   "io.circe" %% "circe-generic" % "0.14.12",
   "io.circe" %% "circe-parser"  % "0.14.12",
-
 
   "com.typesafe.akka" %% "akka-http-testkit" % AkkaHttpVersion,
   "org.scalatest" %% "scalatest" % "3.2.19" % "test",

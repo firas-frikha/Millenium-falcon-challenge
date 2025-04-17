@@ -2,6 +2,7 @@ package cli
 
 import application.{bfsTraversal, buildAdjacencyList}
 import infrastructure.{DefaultRoutesQueryService, MillenniumFalconConfiguration, SlickSessionProvider}
+import io.circe.generic.codec.DerivedAsObjectCodec.deriveCodec
 import model.BountyHuntersData
 import repository.RoutesSchema
 
@@ -11,18 +12,19 @@ import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
 
 object GiveMeTheOdds extends App {
+
   if (args.length != 2) {
     Console.err.print("Usage: give-me-the-odds <millennium-falcon.json> <empire.json>")
-    sys.exit()
+    sys.exit(1)
   }
   else {
-    val maybeFalconConfig = readJson[MillenniumFalconConfiguration](args(0))
+    val maybeFalconConfig = readJson[MillenniumFalconConfiguration.Configuration](args(0))
     val maybeBountyHuntersData = readJson[BountyHuntersData](args(1))
 
     (maybeFalconConfig, maybeBountyHuntersData) match {
       case (Success(falconConfig), Success(bountyHuntersData)) =>
 
-        val slickSessionProvider = new SlickSessionProvider(falconConfig.databaseUrl)
+        val slickSessionProvider = new SlickSessionProvider(falconConfig.databaseRoute)
         val defaultRoutesQueryService = new DefaultRoutesQueryService(new RoutesSchema(), slickSessionProvider.slickSession)
 
         val allRoutes = defaultRoutesQueryService.fetchAll()
@@ -32,7 +34,7 @@ object GiveMeTheOdds extends App {
             adjacencyList, bountyHuntersData)
           survivalPercentage
         }
-        val percentage = Await.result(result, 20.seconds)
+        val percentage = Await.result(result, 10.seconds)
         println(percentage * 100)
 
       case (Failure(err), _) =>
