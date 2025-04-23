@@ -4,9 +4,10 @@ ThisBuild / scalaVersion := "2.13.16"
 
 enablePlugins(JavaAppPackaging)
 
-Compile / mainClass := Some("cli/GiveMeTheOdds")
-
 name := "MillenniumFalconBackend"
+
+run / fork := true
+
 
 lazy val root = (project in file("."))
   .settings(

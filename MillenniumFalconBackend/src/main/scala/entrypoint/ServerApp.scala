@@ -39,7 +39,7 @@ final class ServerApp(context: ActorContext[_]) {
 object ServerApp {
 
   final val ServerConfigPath = "SERVER_CONFIG_PATH"
-  final  val MillenniumFalconConfigPath = "MILLENIUM_CONFIG_PATH"
+  final  val MillenniumFalconConfigPath = "MILLENNIUM_CONFIG_PATH"
 
   def main(array: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
