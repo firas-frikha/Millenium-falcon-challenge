@@ -85,5 +85,5 @@ When running sbt run, the project will prompt you to choose a main class. This p
 #### 1 entrypoint.ServerApp 
 — the HTTP server backend (select this when prompted).
 
-#### 1entrypoint.CliApp 
+#### 2 entrypoint.CliApp 
 — a CLI-based interface (alternative usage).
