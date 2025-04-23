@@ -31,7 +31,7 @@ spec:
           env:
             - name: SERVER_CONFIG_PATH
               value: /etc/application-config/application.conf
-            - name: MILLENIUM_CONFIG_PATH
+            - name: MILLENNIUM_CONFIG_PATH
               value: /etc/millennium-config/routes_config.json
       volumes:
         - name: application-config-volume
