@@ -18,7 +18,7 @@ object MillenniumFalconConfiguration extends ExtensionId[MillenniumFalconConfigu
   final case class Configuration(autonomy: Int,
                                  departure: String,
                                  arrival: String,
-                                 databaseRoute: String)
+                                 routes_db: String)
 
   object Configuration {
     implicit val configurationFormat: RootJsonFormat[Configuration] = jsonFormat4(Configuration.apply)

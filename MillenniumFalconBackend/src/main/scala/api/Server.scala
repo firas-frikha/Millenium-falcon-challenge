@@ -2,10 +2,8 @@ package api
 
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
-import akka.http.scaladsl.Http
 import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
-import akka.http.scaladsl.server.Route
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -13,7 +11,6 @@ import scala.util.{Failure, Success}
 object Server {
 
   def apply(httpBinder: HttpBinder): Behavior[Input] = Behaviors.setup { actorContext =>
-    import actorContext.system
 
     Behaviors.receiveMessage {
       case Bind(address, port, routes) =>

@@ -24,7 +24,7 @@ object GiveMeTheOdds extends App {
     (maybeFalconConfig, maybeBountyHuntersData) match {
       case (Success(falconConfig), Success(bountyHuntersData)) =>
 
-        val slickSessionProvider = new SlickSessionProvider(falconConfig.databaseRoute)
+        val slickSessionProvider = new SlickSessionProvider(falconConfig.routes_db)
         val defaultRoutesQueryService = new DefaultRoutesQueryService(new RoutesSchema(), slickSessionProvider.slickSession)
 
         val allRoutes = defaultRoutesQueryService.fetchAll()

@@ -2,6 +2,6 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="separateProdTestSources" value="true" />
-    <profile name="sbt 1" modules="MillenniumFalconBackend,MillenniumFalconBackend.main,MillenniumFalconBackend.test" />
+    <profile name="sbt 1" modules="MillenniumFalconBackend,MillenniumFalconBackend.main,MillenniumFalconBackend.test,give-me-the-odds,give-me-the-odds.main,give-me-the-odds.test" />
   </component>
 </project>

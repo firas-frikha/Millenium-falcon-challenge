@@ -6,7 +6,7 @@ enablePlugins(JavaAppPackaging)
 
 Compile / mainClass := Some("cli/GiveMeTheOdds")
 
-name := "give-me-the-odds"
+name := "MillenniumFalconBackend"
 
 lazy val root = (project in file("."))
   .settings(
