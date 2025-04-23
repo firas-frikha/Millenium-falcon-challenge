@@ -6,9 +6,9 @@ A Scala backend system designed to calculate the **maximum survival probability*
 
 ## 🚀 Project Overview
 
-The objective is to compute the optimal path for the Millennium Falcon to travel from a starting planet to a destination planet within a limited countdown of days. The survival probability is influenced by:
+The objective is to compute the probability of the Millennium Falcon to travel from a starting planet to a destination planet within a limited countdown of days. The survival probability is influenced by:
 - The ship’s **autonomy** (maximum distance it can travel before refueling),
-- **Routes** between planets (with associated travel times),
+- **Routes** between planets,
 - **Bounty hunter appearances**, which reduce survival odds if encountered.
 
 This backend applies a **Breadth-First Search (BFS)** approach to explore possible paths and determine the one with the **highest survival probability**.
@@ -28,7 +28,7 @@ The core logic uses a BFS traversal over the graph, maintaining a queue of BfsSt
 planet: current location,
 currentDay: current mission day,
 autonomy: remaining distance the ship can travel without refueling,
-survivalProbability: current survival chance (starts at 1.0 and can decrease).
+survivalProbability: current survival chance.
 At each step, the algorithm explores two possible actions:
 
 #### 1. Travel to an adjacent planet if the ship has enough remaining autonomy for the route. 
