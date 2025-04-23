@@ -8,7 +8,6 @@ name := "MillenniumFalconBackend"
 
 run / fork := true
 
-
 lazy val root = (project in file("."))
   .settings(
     name := "MillenniumFalconBackend"

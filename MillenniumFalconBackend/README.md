@@ -87,3 +87,39 @@ When running sbt run, the project will prompt you to choose a main class. This p
 
 #### 2 entrypoint.CliApp 
 — a CLI-based interface (alternative usage).
+
+### 🚀 Using the CLI
+
+This project also includes a command-line interface called give-me-the-odds for calculating the survival probability directly from the terminal.
+
+#### 🛠️ How to Build the CLI
+
+To create the CLI executable, use the following command:
+
+```bash
+sbt stage
+```
+
+This will generate a script at:
+
+target/universal/stage/bin/give-me-the-odds
+
+### 🧪 How to Use the CLI
+
+You can run the CLI like this:
+
+```bash
+./target/universal/stage/bin/give-me-the-odds path/to/millennium-falcon.json path/to/empire.json
+```
+
+To run give-me-the-odds from anywhere without the full path:
+
+```bash
+export PATH=$PATH:$(pwd)/target/universal/stage/bin
+```
+
+Once set, you can simply run:
+
+```bash
+give-me-the-odds millennium-falcon.json empire.json
+```
