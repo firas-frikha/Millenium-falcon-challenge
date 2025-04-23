@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-end
+  labels:
+    app: millennium-falcon-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: millennium-falcon-frontend
+  template:
+    metadata:
+      labels:
+        app: millennium-falcon-frontend
+    spec:
+      containers:
+        - name: front-end
+          image: firasfrikha1995/millenniumfalconfrontend

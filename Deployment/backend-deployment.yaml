@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-end
+  labels:
+    app: millennium-falcon-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: millennium-falcon-backend
+  template:
+    metadata:
+      labels:
+        app: millennium-falcon-backend
+    spec:
+      containers:
+        - name: back-end
+          image: firasfrikha1995/millenniumfalconbackend
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: application-config-volume
+              mountPath: /etc/application-config
+              readOnly: true
+            - name: millennium-config
+              mountPath: /etc/millennium-config
+              readOnly: true
+            - name: db-file
+              mountPath: /database/universe.db
+          env:
+            - name: SERVER_CONFIG_PATH
+              value: /etc/application-config/application.conf
+            - name: MILLENIUM_CONFIG_PATH
+              value: /etc/millennium-config/routes_config.json
+      volumes:
+        - name: application-config-volume
+          configMap:
+            name: application-config-volume
+        - name: millennium-config
+          configMap:
+            name: routes-config
+        - name: db-file
+          hostPath:
+            path: /mnt/database/universe.db
+            type: File

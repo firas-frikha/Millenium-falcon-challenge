@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: falcon-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+spec:
+  rules:
+    - host: millennium-falcon.dev
+      http:
+        paths:
+          - path: /compute
+            pathType: Prefix
+            backend:
+              service:
+                name: millennium-falcon-backend
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: millennium-falcon-frontend
+                port:
+                  number: 80
