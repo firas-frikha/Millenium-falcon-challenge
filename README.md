@@ -6,7 +6,7 @@ Welcome to the **Millennium Falcon Challenge** — a full-stack project designed
 
 This project is a complete solution consisting of:
 - A **Scala backend** to perform the survival computation using a BFS-based pathfinding algorithm.
-- A **React frontend** for file upload and result visualization.
+- A **Angular frontend** for file upload and result visualization.
 - A **Kubernetes deployment** setup with Docker images, config maps, services, and ingress routing.
 
 ---
